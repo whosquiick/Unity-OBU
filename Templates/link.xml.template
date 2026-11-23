@@ -1,0 +1,13 @@
+<!--
+  Copy or merge into Assets/UnityOBU/link.xml (Tools → UnityOBU → Generate link.xml
+  will overwrite Assets/UnityOBU/link.xml with whatever [Keep] types it finds).
+  Add your own reflection / Addressables / JSON-bound types here.
+-->
+<linker>
+  <assembly fullname="UnityOBU.Runtime" preserve="all" />
+  <!--
+  <assembly fullname="Assembly-CSharp">
+    <type fullname="Your.Namespace.ReflectedType" preserve="all" />
+  </assembly>
+  -->
+</linker>
