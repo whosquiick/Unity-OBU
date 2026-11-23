@@ -1,4 +1,5 @@
 # Unity OBU
+-# Please note this was human-coded, then improved and optimised by ai.
 
 Unity OBU is a build-time and runtime hardening package for Unity Android (IL2CPP) games. It raises the cost of dumping, asset ripping and casual reverse engineering. It does **not** make those things impossible.
 
