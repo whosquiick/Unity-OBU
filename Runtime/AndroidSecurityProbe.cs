@@ -10,7 +10,7 @@ namespace UnityOBU
     //
     // On non-Android platforms (and in the Editor) these return "not detected" so the same
     // code path runs everywhere without #if noise leaking into callers.
-    public static class AndroidSecurityProbe
+    public static partial class AndroidSecurityProbe
     {
         public static bool IsDebuggerAttached(out string detail)
         {

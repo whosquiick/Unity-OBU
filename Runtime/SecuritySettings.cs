@@ -27,15 +27,36 @@ namespace UnityOBU
         [Tooltip("Key used to encrypt and decrypt protected asset bundles. Keep it out of source control for real projects.")]
         public string assetBundleKey = "";
 
+        [Header("IL2CPP metadata protection (advanced)")]
+        [Tooltip("XOR-obfuscate global-metadata.dat in an exported Android Gradle project. Requires the paired native decrypt hook. Off by default; read the README before enabling.")]
+        public bool protectIl2CppMetadata = false;
+
+        [Tooltip("Key used to obfuscate global-metadata.dat. Must match the value your native hook uses to restore it.")]
+        public string metadataKey = "";
+
         [Header("Runtime checks")]
         public bool runtimeChecksEnabled = true;
 
         [Tooltip("Which heuristics to run. All of these are best-effort and can be bypassed.")]
-        public SecurityCheck enabledChecks = SecurityCheck.All;
+        public SecurityCheck enabledChecks = SecurityCheck.Recommended;
+
+        [Tooltip("Start the native libobunative.so watcher (ptrace guard + monitor) if the .so is present.")]
+        public bool useNativeGuard = true;
 
         [Tooltip("How the app reacts the first time a check trips.")]
         public SecurityResponse response = SecurityResponse.LogOnly;
 
+        [Header("Response escalation")]
+        [Tooltip("After enough distinct signals, switch from 'response' to 'escalatedResponse'.")]
+        public bool escalationEnabled = false;
+
+        [Tooltip("Number of distinct checks that must trip before escalating.")]
+        public int escalateAfterHits = 2;
+
+        [Tooltip("Stronger response used once the escalation threshold is reached.")]
+        public SecurityResponse escalatedResponse = SecurityResponse.WipeAndQuit;
+
+        [Header("Check tuning")]
         [Tooltip("Seconds between periodic re-checks after startup. Zero means startup only.")]
         public float recheckInterval = 20f;
 
@@ -44,6 +65,9 @@ namespace UnityOBU
 
         [Tooltip("SHA-256 (hex, lowercase) of the signing certificate you ship with. Leave blank to skip the signature check.")]
         public string expectedSigningSha256 = "";
+
+        [Tooltip("Comma-separated installer package names you trust (e.g. com.android.vending,com.amazon.venezia). Leave blank to skip the installer check.")]
+        public string allowedInstallers = "";
 
         [Header("Editor only")]
         [Tooltip("Run the runtime checks while playing in the Editor. Off by default because the Editor always looks 'debuggable'.")]
@@ -72,7 +96,7 @@ namespace UnityOBU
         {
             foreach (SecurityCheck value in System.Enum.GetValues(typeof(SecurityCheck)))
             {
-                if (value == SecurityCheck.None || value == SecurityCheck.All)
+                if (value == SecurityCheck.None || value == SecurityCheck.All || value == SecurityCheck.Recommended)
                 {
                     continue;
                 }

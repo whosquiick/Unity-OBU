@@ -32,7 +32,22 @@ namespace UnityOBU
         Emulator = 1 << 4,
         SignatureMismatch = 1 << 5,
         PackageMismatch = 1 << 6,
-        All = Debugger | TracerPid | Frida | Root | Emulator | SignatureMismatch | PackageMismatch
+
+        // Added in 1.1.0
+        Debuggable = 1 << 7,
+        UntrustedInstaller = 1 << 8,
+        Vpn = 1 << 9,
+        NativeIntegrity = 1 << 10,
+        Il2CppDumper = 1 << 11,
+        HookDetected = 1 << 12,
+
+        All = Debugger | TracerPid | Frida | Root | Emulator | SignatureMismatch | PackageMismatch |
+              Debuggable | UntrustedInstaller | Vpn | NativeIntegrity | Il2CppDumper | HookDetected,
+
+        // A sensible default that leaves out the noisier opt-in checks (emulator, VPN,
+        // installer source) so a normal release doesn't false-positive on day one.
+        Recommended = Debugger | TracerPid | Frida | Root | SignatureMismatch | PackageMismatch |
+                      Debuggable | NativeIntegrity | Il2CppDumper | HookDetected
     }
 
     public struct SecurityViolation

@@ -41,6 +41,11 @@ namespace UnityOBU
                 return;
             }
 
+            if (_settings.useNativeGuard)
+            {
+                NativeGuard.Start();
+            }
+
             OBUSecurity.RunChecks(_settings);
 
             if (_settings.recheckInterval > 0.01f)

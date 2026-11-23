@@ -16,9 +16,8 @@ namespace UnityOBU
         private static readonly HashSet<SecurityCheck> AlreadyReported = new HashSet<SecurityCheck>();
 
         public static bool AnyViolationSeen { get; private set; }
+        public static int DistinctViolationCount { get { return AlreadyReported.Count; } }
 
-        // Register a callback that clears something sensitive (decrypted caches, loaded
-        // protected bundles, in-memory keys) when a WipeSensitiveData response fires.
         public static void RegisterWipeHandler(Action handler)
         {
             if (handler != null && !WipeHandlers.Contains(handler))
@@ -77,6 +76,18 @@ namespace UnityOBU
                     return !AndroidSecurityProbe.SignatureMatches(settings.expectedSigningSha256, out detail);
                 case SecurityCheck.PackageMismatch:
                     return PackageMismatch(settings, out detail);
+                case SecurityCheck.Debuggable:
+                    return AndroidSecurityProbe.IsDebuggable(out detail);
+                case SecurityCheck.UntrustedInstaller:
+                    return AndroidSecurityProbe.UntrustedInstaller(settings.allowedInstallers, out detail);
+                case SecurityCheck.Vpn:
+                    return AndroidSecurityProbe.VpnActive(out detail);
+                case SecurityCheck.NativeIntegrity:
+                    return AndroidSecurityProbe.NativeIntegrityFailed(out detail);
+                case SecurityCheck.Il2CppDumper:
+                    return AndroidSecurityProbe.LooksLikeIl2CppDumper(out detail);
+                case SecurityCheck.HookDetected:
+                    return AndroidSecurityProbe.LooksHooked(out detail);
                 default:
                     return false;
             }
@@ -118,7 +129,18 @@ namespace UnityOBU
                 }
             }
 
-            switch (settings.response)
+            SecurityResponse response = settings.response;
+            if (settings.escalationEnabled && AlreadyReported.Count >= Math.Max(1, settings.escalateAfterHits))
+            {
+                response = settings.escalatedResponse;
+            }
+
+            Apply(response);
+        }
+
+        private static void Apply(SecurityResponse response)
+        {
+            switch (response)
             {
                 case SecurityResponse.LogOnly:
                 case SecurityResponse.CallbackOnly:
@@ -160,7 +182,6 @@ namespace UnityOBU
 #endif
         }
 
-        // Exposed so the guard can reset state between play sessions in the Editor.
         public static void ResetReportedState()
         {
             AlreadyReported.Clear();

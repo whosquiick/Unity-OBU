@@ -65,12 +65,20 @@ namespace UnityOBU.Editor
             DrawKeyRow("stringKey", "String key");
             DrawKeyRow("assetBundleKey", "Asset bundle key");
             EditorGUILayout.Space(4);
+            DrawProp("protectIl2CppMetadata");
+            DrawKeyRow("metadataKey", "Metadata key");
+            EditorGUILayout.Space(4);
             DrawProp("runtimeChecksEnabled");
+            DrawProp("useNativeGuard");
             DrawProp("enabledChecks");
             DrawProp("response");
+            DrawProp("escalationEnabled");
+            DrawProp("escalateAfterHits");
+            DrawProp("escalatedResponse");
             DrawProp("recheckInterval");
             DrawProp("expectedPackageName");
             DrawProp("expectedSigningSha256");
+            DrawProp("allowedInstallers");
             DrawProp("runInEditor");
             _serialized.ApplyModifiedProperties();
 

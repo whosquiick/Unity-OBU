@@ -1,6 +1,6 @@
 {
   "name": "com.unityobu.security",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "displayName": "Unity OBU",
   "description": "Build-time and runtime hardening for Unity Android IL2CPP apps. String encryption, encrypted asset bundles, a build pipeline gate that enforces IL2CPP stripping, and best-effort anti-debug / anti-tamper runtime checks. Raises the bar against dumping and asset ripping; it does not make them impossible.",
   "unity": "2021.3",
